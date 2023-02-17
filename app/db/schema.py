@@ -54,6 +54,22 @@ class Base(DeclarativeBase):
                 detail=repr(ex)
             ) from ex
     
+    async def delete(self, db_session: AsyncSession):
+        try:
+            await db_session.delete(self)
+            await db_session.commit()
+            return True
+        except SQLAlchemyError as ex:
+            raise HTTPException(
+                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                detail=repr(ex)
+            ) from ex
+            
+    async def update(self, db_session: AsyncSession, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+        await self.save(db_session)
+    
 
 class User(Base):
     __tablename__ = 'user_account'
@@ -82,3 +98,27 @@ class Address(Base):
     
     def __repr__(self) -> str:
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
+    
+    
+class UserPermission(Base):
+    __tablename__ = 'user_permission'
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
+    permission_id: Mapped[int] = mapped_column(ForeignKey("permission.id"))
+    council_id: Mapped[int] = mapped_column(ForeignKey("council.id"))
+    
+    
+class Permission(Base):
+    __tablename__ = 'permission'
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100))
+    
+class Council(Base):
+    __tablename__ = 'council'
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+    value: Mapped[str] = mapped_column(String(100))
+    
