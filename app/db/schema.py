@@ -3,7 +3,8 @@ from sqlalchemy import (
     ForeignKey,
     func,
     Integer,
-    String
+    String,
+    select
 )
 import typing
 
@@ -100,16 +101,6 @@ class Address(Base):
         return f"Address(id={self.id!r}, email_address={self.email_address!r})"
     
     
-class UserPermission(Base):
-    __tablename__ = 'user_permission'
-    
-    id: Mapped[int] = mapped_column(primary_key=True)
-
-    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    permission_id: Mapped[int] = mapped_column(ForeignKey("permission.id"))
-    council_id: Mapped[int] = mapped_column(ForeignKey("council.id"))
-    
-    
 class Permission(Base):
     __tablename__ = 'permission'
     
@@ -121,4 +112,34 @@ class Council(Base):
     
     id: Mapped[int] = mapped_column(primary_key=True)
     value: Mapped[str] = mapped_column(String(100))
+    
+    
+class UserPermission(Base):
+    __tablename__ = 'user_permission'
+    
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
+    permission_id: Mapped[int] = mapped_column(ForeignKey("permission.id"))
+    council_id: Mapped[int] = mapped_column(ForeignKey("council.id"))
+    
+    @classmethod
+    async def get_council(cls, db_session: AsyncSession, user_id: int):
+        smth = (
+            select(
+                User.id,
+                User.f_name,
+                User.s_name,
+                User.l_name,
+                Permission.name,
+                Council.value
+            )
+            .join(User)
+            .join(Council)
+            .join(Permission)
+            .where(User.id == user_id)
+        )
+        res = await db_session.execute(smth).all()
+        return res
+        
     
