@@ -128,18 +128,18 @@ class UserPermission(Base):
         smth = (
             select(
                 User.id,
-                User.f_name,
-                User.s_name,
-                User.l_name,
                 Permission.name,
                 Council.value
             )
-            .join(User)
+            .join(UserPermission, User.id == UserPermission.user_id)
             .join(Council)
             .join(Permission)
             .where(User.id == user_id)
         )
-        res = await db_session.execute(smth).all()
-        return res
+        res = await db_session.execute(smth)
+        
+        ans = res.all()
+        print(ans)
+        return ans
         
     
