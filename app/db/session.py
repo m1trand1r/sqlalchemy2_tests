@@ -5,8 +5,6 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config import settings
 
-url = 'postgresql+asyncpg://test_user:testtest@127.0.0.1:5432/test_db'
-
 engine = create_async_engine(
     url=settings.DATABASE_URL,
     future=True,
