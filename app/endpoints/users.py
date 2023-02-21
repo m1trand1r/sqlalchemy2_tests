@@ -9,6 +9,7 @@ from fastapi import (
 )
 from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from app.db.schema import (
     User,
@@ -113,3 +114,20 @@ async def get_permissions(
     resp.list_permissions = buf
         
     return resp
+
+@router.post('/add_address')
+async def add_address(
+    user_id: int = Form(),
+    email: str = Form(),
+    db_session: AsyncSession = Depends(get_db)
+):
+    adress = Address(user_id=user_id, email_address=email)
+    await adress.save(db_session=db_session)
+    return status.HTTP_201_CREATED
+
+@router.get('/get_addresses/{user_id}')
+async def get_addresses(
+    user_id: int,
+    db_session: AsyncSession = Depends(get_db)
+):
+    await User.get_user_adresses(user_id=user_id, db_session=db_session)
