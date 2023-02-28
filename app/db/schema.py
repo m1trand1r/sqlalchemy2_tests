@@ -74,80 +74,81 @@ class Base(DeclarativeBase):
             setattr(self, key, value)
         await self.save(db_session)
     
+base = Base()
 
-class User(Base):
-    __tablename__ = 'user_account'
+# class User(Base):
+#     __tablename__ = 'user_account'
     
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(20))
-    f_name: Mapped[str] = mapped_column(String(20))
-    s_name: Mapped[str] = mapped_column(String(20))
-    l_name: Mapped[str] = mapped_column(String(20))
-    addresses : Mapped[typing.List[Address]] = relationship(lazy='raise')
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     username: Mapped[str] = mapped_column(String(20))
+#     f_name: Mapped[str] = mapped_column(String(20))
+#     s_name: Mapped[str] = mapped_column(String(20))
+#     l_name: Mapped[str] = mapped_column(String(20))
+#     addresses : Mapped[typing.List[Address]] = relationship(lazy='raise')
     
     
     
-    # def __repr__(self) -> str:
-    #     return f'User(id={self.id}, username={self.username}, fio={self.f_name + self.s_name + self.l_name})'
-    @staticmethod
-    async def get_user_adresses(user_id, db_session: AsyncSession):
-        smth = select(User).options(selectinload(User.addresses)).where(User.id == user_id)
-        res = await db_session.scalars(smth)
-        for i in res:
-            for j in i.addresses:
-                print(j.email_address)
+#     # def __repr__(self) -> str:
+#     #     return f'User(id={self.id}, username={self.username}, fio={self.f_name + self.s_name + self.l_name})'
+#     @staticmethod
+#     async def get_user_adresses(user_id, db_session: AsyncSession):
+#         smth = select(User).options(selectinload(User.addresses)).where(User.id == user_id)
+#         res = await db_session.scalars(smth)
+#         for i in res:
+#             for j in i.addresses:
+#                 print(j.email_address)
 
     
-class Address(Base):
-    __tablename__ = "address"
+# class Address(Base):
+#     __tablename__ = "address"
 
-    id = mapped_column(Integer, primary_key=True)
-    user_id = mapped_column(ForeignKey("user_account.id"))
-    email_address: Mapped[str]
+#     id = mapped_column(Integer, primary_key=True)
+#     user_id = mapped_column(ForeignKey("user_account.id"))
+#     email_address: Mapped[str]
     
-    def __repr__(self) -> str:
-        return f"Address(id={self.id!r}, email_address={self.email_address})"
-    
-    
-class Permission(Base):
-    __tablename__ = 'permission'
-    
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(100))
-    
-class Council(Base):
-    __tablename__ = 'council'
-    
-    id: Mapped[int] = mapped_column(primary_key=True)
-    value: Mapped[str] = mapped_column(String(100))
+#     def __repr__(self) -> str:
+#         return f"Address(id={self.id!r}, email_address={self.email_address})"
     
     
-class UserPermission(Base):
-    __tablename__ = 'user_permission'
+# class Permission(Base):
+#     __tablename__ = 'permission'
     
-    id: Mapped[int] = mapped_column(primary_key=True)
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     name: Mapped[str] = mapped_column(String(100))
+    
+# class Council(Base):
+#     __tablename__ = 'council'
+    
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     value: Mapped[str] = mapped_column(String(100))
+    
+    
+# class UserPermission(Base):
+#     __tablename__ = 'user_permission'
+    
+#     id: Mapped[int] = mapped_column(primary_key=True)
 
-    user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    permission_id: Mapped[int] = mapped_column(ForeignKey("permission.id"))
-    council_id: Mapped[int] = mapped_column(ForeignKey("council.id"))
+#     user_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
+#     permission_id: Mapped[int] = mapped_column(ForeignKey("permission.id"))
+#     council_id: Mapped[int] = mapped_column(ForeignKey("council.id"))
     
-    @classmethod
-    async def get_council(cls, db_session: AsyncSession, user_id: int):
-        smth = (
-            select(
-                User.id,
-                Permission.name,
-                Council.value
-            )
-            .join(UserPermission, User.id == UserPermission.user_id)
-            .join(Council)
-            .join(Permission)
-            .where(User.id == user_id)
-        )
-        res = await db_session.execute(smth)
+#     @classmethod
+#     async def get_council(cls, db_session: AsyncSession, user_id: int):
+#         smth = (
+#             select(
+#                 User.id,
+#                 Permission.name,
+#                 Council.value
+#             )
+#             .join(UserPermission, User.id == UserPermission.user_id)
+#             .join(Council)
+#             .join(Permission)
+#             .where(User.id == user_id)
+#         )
+#         res = await db_session.execute(smth)
         
-        ans = res.all()
-        print(ans)
-        return ans
+#         ans = res.all()
+#         print(ans)
+#         return ans
         
     
