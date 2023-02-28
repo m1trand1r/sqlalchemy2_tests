@@ -21,7 +21,7 @@ from sqlalchemy.orm import (
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.schema import Base
+from app.db import Base
 
 
 class User(Base):
