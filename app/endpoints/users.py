@@ -11,27 +11,20 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from app.db.schema import (
+from app.db.user_schema import (
     User,
-    Permission,
-    Council,
     UserPermission,
     Address
 )
+from app.db.permission_schema import (
+    Permission,
+    Council,
+)
 from app.db.session import get_db
-from pydantic import BaseModel
-
-
-# Не надо так делать это просто для теста чтоб не делать папку 
-
-class PermissionSchema(BaseModel):
-    user_id: int
-    permission_name: str
-    council_name: str
-    
-    
-class PermissionListSchema(BaseModel):
-    list_permissions: Optional[List[PermissionSchema]]
+from app.schema.user import (
+    PermissionListSchema,
+    PermissionSchema
+)
 
 
 router = APIRouter()
