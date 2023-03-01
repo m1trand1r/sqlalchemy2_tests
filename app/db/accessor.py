@@ -37,3 +37,4 @@ class UserAccessor:
                 PermissionSchema(**tpl._asdict())
             )
         return PermissionListSchema(list_permissions=buf)
+    
