@@ -25,6 +25,7 @@ from app.schema.user import (
     PermissionListSchema,
     PermissionSchema
 )
+from app.db.accessor import UserAccessor
 
 
 router = APIRouter()
@@ -84,29 +85,32 @@ async def insert_user_permission(
     await data.save(db_session)
     return data
 
-@router.get('/show_permissions/{id}')
+@router.get('/show_permissions/{user_id}', response_model=PermissionListSchema)
 async def get_permissions(
-    id: int,
+    user_id: int,
     db_session: AsyncSession = Depends(get_db)
 ):
-    ans = await UserPermission.get_council(
-        db_session=db_session,
-        user_id=id
-    )
-    resp = PermissionListSchema()
-    buf = []
-    for tpl in ans:
-        x = tpl._asdict()
-        buf.append(
-            PermissionSchema(
-                user_id=x['id'],
-                permission_name=x['name'],
-                council_name=x['value']
-            )
-        )
-    resp.list_permissions = buf
-        
-    return resp
+    # ans = await UserPermission.get_council(
+    #     db_session=db_session,
+    #     user_id=id
+    # )
+    # resp = PermissionListSchema()
+    # buf = []
+    # for tpl in ans:
+    #     x = tpl._asdict()
+    #     buf.append(
+    #         PermissionSchema(
+    #             user_id=x['id'],
+    #             permission_name=x['name'],
+    #             council_name=x['value']
+    #         )
+    #     )
+    # resp.list_permissions = buf
+    
+    # return resp
+    
+    ans = await UserAccessor.get_permissions(db_session=db_session, user_id=user_id)
+    return ans
 
 @router.post('/add_address')
 async def add_address(

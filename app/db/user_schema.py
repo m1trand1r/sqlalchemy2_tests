@@ -19,7 +19,7 @@ from sqlalchemy.orm import (
     selectinload
 )
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncSession
+# from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db import Base
 
@@ -38,13 +38,13 @@ class User(Base):
     
     # def __repr__(self) -> str:
     #     return f'User(id={self.id}, username={self.username}, fio={self.f_name + self.s_name + self.l_name})'
-    @staticmethod
-    async def get_user_adresses(user_id, db_session: AsyncSession):
-        smth = select(User).options(selectinload(User.addresses)).where(User.id == user_id)
-        res = await db_session.scalars(smth)
-        for i in res:
-            for j in i.addresses:
-                print(j.email_address)
+    # @staticmethod
+    # async def get_user_adresses(user_id, db_session: AsyncSession):
+    #     smth = select(User).options(selectinload(User.addresses)).where(User.id == user_id)
+    #     res = await db_session.scalars(smth)
+    #     for i in res:
+    #         for j in i.addresses:
+    #             print(j.email_address)
 
     
 class Address(Base):

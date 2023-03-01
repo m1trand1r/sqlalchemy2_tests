@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from typing import List
 
 class PermissionSchema(BaseModel):
-    user_id: int
-    permission_name: str
-    council_name: str
+    id: int
+    name: str
+    value: str
     
     
 class PermissionListSchema(BaseModel):
