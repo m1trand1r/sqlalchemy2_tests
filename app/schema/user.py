@@ -9,3 +9,11 @@ class PermissionSchema(BaseModel):
     
 class PermissionListSchema(BaseModel):
     list_permissions: List[PermissionSchema] | None
+    
+class UserBase(BaseModel):
+    id: int
+    username: str
+    f_name: str # Имя
+    s_name: str # Фамилия
+    l_name: str # Отчество
+    
