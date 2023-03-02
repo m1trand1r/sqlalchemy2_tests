@@ -28,16 +28,15 @@ class User(Base):
     __tablename__ = 'user_account'
     
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(String(20))
-    f_name: Mapped[str] = mapped_column(String(20))
-    s_name: Mapped[str] = mapped_column(String(20))
-    l_name: Mapped[str] = mapped_column(String(20))
-    addresses : Mapped[typing.List[Address]] = relationship(lazy='raise')
+    username: Mapped[str] = mapped_column(String(20), unique=True)
+    f_name: Mapped[str] = mapped_column(String(20), nullable=False)
+    s_name: Mapped[str] = mapped_column(String(20), nullable=False)
+    l_name: Mapped[str] = mapped_column(String(20), nullable=False)
+    password: Mapped[str] = mapped_column(String(512), nullable=False)
     
     
-    
-    # def __repr__(self) -> str:
-    #     return f'User(id={self.id}, username={self.username}, fio={self.f_name + self.s_name + self.l_name})'
+    def __repr__(self) -> str:
+        return f'User(id={self.id}, username={self.username}, fio={self.f_name + self.s_name + self.l_name})'
     # @staticmethod
     # async def get_user_adresses(user_id, db_session: AsyncSession):
     #     smth = select(User).options(selectinload(User.addresses)).where(User.id == user_id)

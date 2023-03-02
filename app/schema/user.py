@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import List
+from app.schema.token import TokenPayload
 
 class PermissionSchema(BaseModel):
     id: int
@@ -15,5 +16,6 @@ class UserBase(BaseModel):
     username: str
     f_name: str # Имя
     s_name: str # Фамилия
-    l_name: str # Отчество
+    token: TokenPayload | None
+    # l_name: str # Отчество
     
