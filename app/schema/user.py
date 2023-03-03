@@ -12,10 +12,10 @@ class PermissionListSchema(BaseModel):
     list_permissions: List[PermissionSchema] | None
     
 class UserBase(BaseModel):
-    id: int
     username: str
     f_name: str # Имя
     s_name: str # Фамилия
     token: TokenPayload | None
-    # l_name: str # Отчество
+    l_name: str # Отчество
+    hashed_password: str
     

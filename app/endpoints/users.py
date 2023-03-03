@@ -26,6 +26,7 @@ from app.schema.user import (
     PermissionSchema
 )
 from app.db.accessor import UserAccessor
+from app.core.security import get_password_hash
 
 
 router = APIRouter()
@@ -36,13 +37,15 @@ async def insert_user(
     f_name: str = Form(),
     s_name: str = Form(),
     l_name: str = Form(),
+    password: str = Form(),
     db_session: AsyncSession = Depends(get_db)
 ):
     user = User(
         username=username,
         f_name=f_name,
         s_name=s_name,
-        l_name=l_name
+        l_name=l_name,
+        password=get_password_hash(password=password)
     )
     await user.save(db_session)
     return user

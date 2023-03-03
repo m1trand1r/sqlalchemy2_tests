@@ -22,11 +22,19 @@ class UserAccessor:
             select(User)
             .where(User.username == username)
         )
-        res = prep.first()
+        res = prep.first()[0]
+        
         if res:
-            return UserBase(**res)
+            return UserBase(
+                username=res.username,
+                f_name=res.f_name,
+                s_name=res.s_name,
+                l_name=res.l_name,
+                hashed_password=res.password
+            )
         else:
             raise status.HTTP_404_NOT_FOUND
+        
     
     @staticmethod
     async def get_permissions(db_session: AsyncSession, user_id: int):
