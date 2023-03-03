@@ -27,6 +27,8 @@ from app.schema.user import (
 )
 from app.db.accessor import UserAccessor
 from app.core.security import get_password_hash
+from app.schema.user import UserBase
+from app.endpoints.dependencies import get_current_user, get_current_active_user
 
 
 router = APIRouter()
@@ -53,8 +55,10 @@ async def insert_user(
 @router.post('/council')
 async def insert_council(
     value: str = Form(),
-    db_session: AsyncSession = Depends(get_db)
+    db_session: AsyncSession = Depends(get_db),
+    current_user: UserBase = Depends(get_current_user)
 ):
+    print('hello', current_user.token)
     council = Council(
         value=value
     )

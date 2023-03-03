@@ -36,7 +36,7 @@ async def authenticate_user(
     db_session: AsyncSession = Depends(get_db)
 ) -> UserBase:
     user = await UserAccessor.get_by_username(username=username, db_session=db_session)
-    print(user)
+    # print(user)
     if not user:
         return False
     if not vertify_password(password, user.hashed_password):

@@ -25,24 +25,26 @@ async def get_current_user(
     db_session: AsyncSession = Depends(get_db),
     token: str = Depends(oauth_scheme)
 ) -> UserBase:
+    
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
         )
-
+        # print(payload)
         token_data = TokenPayload(**payload)
     except (JWTError, ValidationError):
+        print(f'{JWTError}\n{ValidationError}')
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail='Could not validate creditenals',
+            detail=f'Could not validate creditenals',
         )
-    user = UserAccessor.get_by_email(db_session, token_data.sub)
+    user = await UserAccessor.get_by_username(db_session, token_data.sub)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='User not found'
         )
-    user.token = TokenPayload
+    user.token = token_data
     return user
     # return UserBase(**convert_to_dict(user))
     # TODO Дописать
