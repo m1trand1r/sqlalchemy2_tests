@@ -18,7 +18,7 @@ import re
 
 
 oauth_scheme = OAuth2PasswordBearerWithCookie(
-    tokenUrl='/token'
+    tokenUrl='/login/token'
 )
 
 async def get_current_user(
