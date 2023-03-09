@@ -33,7 +33,7 @@ from app.endpoints.dependencies import get_current_user, get_current_active_user
 
 router = APIRouter()
 
-@router.post('/user')
+@router.post('/user', tags=['user'])
 async def insert_user(
     username: str = Form(),
     f_name: str = Form(),
@@ -68,7 +68,8 @@ async def insert_council(
 @router.post('/permission')
 async def insert_permission(
     name: str = Form(),
-    db_session: AsyncSession = Depends(get_db)
+    db_session: AsyncSession = Depends(get_db),
+    current_user: UserBase = Depends(get_current_user)
 ):
     permission = Permission(
         name=name

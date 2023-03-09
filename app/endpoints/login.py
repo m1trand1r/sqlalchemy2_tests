@@ -60,7 +60,7 @@ async def token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='incorrect username or password'
         )
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(seconds=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )

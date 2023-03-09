@@ -33,7 +33,6 @@ async def get_current_user(
         # print(payload)
         token_data = TokenPayload(**payload)
     except (JWTError, ValidationError):
-        print(f'{JWTError}\n{ValidationError}')
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f'Could not validate creditenals',
